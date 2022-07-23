@@ -4,7 +4,6 @@ import lior.nataf.emailserver.exception.InvalidEmailException;
 import lior.nataf.emailserver.exception.InvalidEmailProviderException;
 import lior.nataf.emailserver.model.Email;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
