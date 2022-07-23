@@ -18,11 +18,13 @@ public abstract class EmailHandler {
         message.setFrom(email.getFrom());
         message.setTo(email.getTo());
         message.setText(email.getBody());
-        try {
-            Thread.sleep(2 * 1000);
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-        }
+
+//      //THIS IS JUST FOR DEBUG SIMULATE TIME FOR SENDING REAL EMAIL
+//        try {
+//            Thread.sleep(2 * 1000);
+//        } catch (InterruptedException ie) {
+//            Thread.currentThread().interrupt();
+//        }
         try {
             javaMailSender.send(message);
             log.info("sent message {} to provider {}", message, providerPostfix);
