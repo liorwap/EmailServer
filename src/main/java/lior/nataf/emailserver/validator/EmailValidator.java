@@ -2,9 +2,9 @@ package lior.nataf.emailserver.validator;
 
 import lior.nataf.emailserver.exception.InvalidEmailException;
 import lior.nataf.emailserver.exception.InvalidEmailProviderException;
+import lior.nataf.emailserver.handler.EmailHandlerContainer;
 import lior.nataf.emailserver.model.Email;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -14,13 +14,12 @@ import java.util.regex.Pattern;
 @Component
 @PropertySource(value={"classpath:email.provider.properties"})
 public class EmailValidator {
-    @Value("${gmail.postfix}")
-    private String gmailMailServerPostfix;
-    @Value("${walla.postfix}")
-    private String wallaMailServerPostfix;
-    @Value("${yahoo.postfix}")
-    private String yahooMailServerPostfix;
 
+    private final EmailHandlerContainer emailHandlerContainer;
+
+    public EmailValidator(EmailHandlerContainer emailHandlerContainer) {
+        this.emailHandlerContainer = emailHandlerContainer;
+    }
 
     public void validate(Email email) throws InvalidEmailException {
         Pattern emailPattern = Pattern.compile("^(.+)@(\\S+)$");
@@ -32,11 +31,8 @@ public class EmailValidator {
             log.error("Invalid email to {}", email.getTo());
             throw new InvalidEmailException(email.getTo());
         }
-        String postfix = "@" + email.getFrom().split("@")[1];
-        boolean isSenderOneOfSupportedProviders = postfix.equals(gmailMailServerPostfix);
-        isSenderOneOfSupportedProviders |= postfix.equals(wallaMailServerPostfix);
-        isSenderOneOfSupportedProviders |= postfix.equals(yahooMailServerPostfix);
-        if(!isSenderOneOfSupportedProviders) {
+        String postfix = emailHandlerContainer.extractVendorPostfixFromAddress(email);
+        if(!emailHandlerContainer.contains(postfix)) {
             log.error("Invalid provider from {}", email);
             throw new InvalidEmailProviderException(email.getFrom());
         }

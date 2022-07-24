@@ -27,9 +27,9 @@ public class EmailController {
     @PostMapping("/sendEmail")
     public ResponseEntity<Email> sendEmail(Email email) {
         try {
-            log.info("received email: {} validating", email);
+            log.info("received email validating {}", email);
             emailValidator.validate(email);
-            log.info("Received email: {} sending to work queue", email);
+            log.info("Received email sending to work queue {}", email);
             jmsTemplate.convertAndSend("local.inmemory.queue", email);
             return new ResponseEntity<>(email, HttpStatus.OK);
         } catch (InvalidEmailException invalidEmailException) {
