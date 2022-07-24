@@ -7,7 +7,7 @@ clients.
 export CR_PAT=<MY ghcr.io TOKEN>
 echo $CR_PAT | docker login ghcr.io -u <MY gchr.io USENAME> --password-stdin
 docker pull ghcr.io/<MY gchr.io USENAME>/emailserver:master
-docker run --user app
+docker run --user app -p 8080:8080 <IMAGE ID>
 ```
 
 # How It Works
